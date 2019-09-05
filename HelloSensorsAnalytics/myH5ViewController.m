@@ -1,0 +1,47 @@
+//
+//  myH5ViewController.m
+//  HelloSensorsAnalytics
+//
+//  Created by Billy on 2019/9/4.
+//  Copyright © 2019年 Sensors Data Inc. All rights reserved.
+//
+
+#import "myH5ViewController.h"
+#import "SensorsAnalyticsSDK.h"
+
+@implementation myH5ViewController
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+    self.title = @"H5ViewWeb";
+    
+    //    NSString *path = [[[NSBundle mainBundle] bundlePath]  stringByAppendingPathComponent:@"test2.html"];
+    //    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:path]];
+    //    [webView loadRequest:request];
+    
+    webView.delegate = self;
+    
+    //网址
+    NSString *httpStr=@"http://39.98.54.111:8000/sa/app.htm?from=ios&a=1#hashjs?b=2&c=3s";
+    NSURL *httpUrl=[NSURL URLWithString:httpStr];
+    NSURLRequest *request=[NSURLRequest requestWithURL:httpUrl];
+    
+    [self.view addSubview:webView];
+    [webView loadRequest:request];
+}
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    if ([[SensorsAnalyticsSDK sharedInstance] showUpWebView:webView WithRequest:request enableVerify:NO]) {
+        return NO;
+    }
+    // 官方教程说设置enableVerify:YES, 但实际测试要为NO才能发送
+    //  [[SensorsAnalyticsSDK sharedInstance] showUpWebView:webView WithRequest:request enableVerify:NO];
+    return YES;
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    //[[SensorsAnalyticsSDK sharedInstance] showUpWebView:webView];
+}
+
+@end
